@@ -1,0 +1,37 @@
+
+# OE_ADD_SWIG_INTERFACES(Core/IEvent.i)
+# OE_ADD_SWIG_INTERFACES(Scene/ISceneNode.i)
+OE_ADD_SWIG_INTERFACES(Scene/TransformationNode.i)
+
+
+SET(CMAKE_SWIG_OUTDIR "${OE_BUILD_DIR}/Swig")
+SET(CMAKE_SWIG_FLAGS "-I${SWIG_DIR}/Lib" "-I${SWIG_DIR}/Lib/reflect")
+
+SET_SOURCE_FILES_PROPERTIES(${OE_SWIG_INTERFACES} PROPERTIES CPLUSPLUS ON)
+
+FOREACH(DIR ${OE_SWIG_DIRS})
+  FILE(MAKE_DIRECTORY ${OE_BUILD_DIR}/Reflect/${DIR})
+ENDFOREACH(DIR)
+
+# MESSAGE(${OE_SWIG_INTERFACES})
+
+SWIG_ADD_MODULE(Extensions_Reflect reflect ${OE_SWIG_INTERFACES})
+# FOREACH(FILE ${OE_SWIG_INTERFACES})
+#   MESSAGE(${FILE})
+# ENDFOREACH(FILE)
+
+
+# Create the extension library
+ADD_LIBRARY(Extensions_Reflect_Help
+  Utils/Reflector.h
+  Utils/Reflector.cpp
+)
+
+SWIG_LINK_LIBRARIES(Extensions_Reflect 
+  Extensions_Reflect_Help
+)
+
+# TARGET_LINK_LIBRARIES(Extensions_Reflect
+#   REFLECT_LIB
+# )
+
